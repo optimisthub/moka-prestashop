@@ -96,8 +96,7 @@ class MokaCheckoutModuleFrontController extends ModuleFrontController
             $retrieveInstallmentInfoRequest->setCurrency($currency);
             $retrieveInstallmentInfoRequest->setOrderAmount($orderAmount);
             $retrieveInstallmentInfoRequest->setIsThreeD(1);
-            $retrieveInstallmentInfoRequest->setIsIncludedCommissionAmount(1);
-
+            
             $retrieveInstallmentInfo = $moka->payments()->retrieveInstallmentInfo($retrieveInstallmentInfoRequest);
 
             $retrieveInstallmentInfoData = (object) [
