@@ -2,8 +2,8 @@
 
 global $_MODULE;
 $_MODULE = array();
-$_MODULE['<{moka}prestashop>moka_dea4e1a4b64408f94be707ff5905c906'] = 'Moka Ödeme';
-$_MODULE['<{moka}prestashop>moka_c8ba02eff3e4107282aa787a9d8d1a6d'] = 'PrestaShop için Moka Ödeme Modülü';
+$_MODULE['<{moka}prestashop>moka_dea4e1a4b64408f94be707ff5905c906'] = 'Moka United Ödeme';
+$_MODULE['<{moka}prestashop>moka_c8ba02eff3e4107282aa787a9d8d1a6d'] = 'PrestaShop için Moka United Ödeme Modülü';
 $_MODULE['<{moka}prestashop>moka_729a51874fe901b092899e9e8b31c97a'] = 'Emin misiniz?';
 $_MODULE['<{moka}prestashop>moka_92d4773a9f32fc3333cb8238471cf763'] = 'You have to enable the cURL extension on your server to install this module';
 $_MODULE['<{moka}prestashop>moka_f4f70727dc34561dfde1a3c529b6205c'] = 'Ayarlar';
@@ -50,12 +50,12 @@ $_MODULE['<{moka}prestashop>checkout_a424835abe9223b2eac8251eebc4a144'] = 'Sanal
 $_MODULE['<{moka}prestashop>checkout_77bcebd5e310d40aaed37889779a2941'] = 'Bu taksit sayısı bu bayi için yapılamaz.';
 $_MODULE['<{moka}prestashop>checkout_2b917d8622918a61f374e5e65f0ec28a'] = 'Bayiye bu sanal pos ve taksit için komisyon oranı girilmemiş.';
 $_MODULE['<{moka}prestashop>checkout_3690dc17b64af0b92ba2df981c0bf116'] = 'Üst bayiye bu sanal pos ve taksit için komisyon oranı girilmemiş.';
-$_MODULE['<{moka}prestashop>checkout_701bf3501ac583d38dffde104a79c611'] = 'Gönderilen bayi adı daha önceden Moka sistemine kaydedilmemiş.';
+$_MODULE['<{moka}prestashop>checkout_701bf3501ac583d38dffde104a79c611'] = 'Gönderilen bayi adı daha önceden Moka United sistemine kaydedilmemiş.';
 $_MODULE['<{moka}prestashop>checkout_cd552b38b36a6f93c09724df50a1c513'] = 'Satılan ürünler sepete eklendiyse, geçerli birim fiyatı girilmelidir.';
 $_MODULE['<{moka}prestashop>checkout_00e3ff51e3c9ea570c6f96bc75705f3b'] = 'Satılan ürünler sepete eklendiyse, geçerli adet girilmelidir.';
 $_MODULE['<{moka}prestashop>checkout_b94c23edce76d5366d29c5cf40c80f6f'] = 'Satılan ürünler sepete eklendiyse, sepet tutarı ile ödeme tutarı eşleşmelidir.';
 $_MODULE['<{moka}prestashop>checkout_0fce483a07455f7c6a137c7e3e36efa9'] = 'Satılan ürünler sepete eklendiyse, geçerli ürün seçilmelidir.';
-$_MODULE['<{moka}prestashop>checkout_fc7d4dde1bddd0aa25c6ce77144b8669'] = 'Satılan ürünler sepete eklendiyse, ürün kodu veya moka ürün ID si girilmelidir.';
+$_MODULE['<{moka}prestashop>checkout_fc7d4dde1bddd0aa25c6ce77144b8669'] = 'Satılan ürünler sepete eklendiyse, ürün kodu veya Moka United ürün ID si girilmelidir.';
 $_MODULE['<{moka}prestashop>checkout_cc8ee37afb5c0c9613473c98a3c6ebc1'] = 'Beklenmeyen bir hata oluştu';
 $_MODULE['<{moka}prestashop>installment_91f7620b0e1b98ecc27a2a5b016bddd3'] = 'Taksit Seçenekleri';
 $_MODULE['<{moka}prestashop>installment_fc2f30f926cba481996ab1e8388d20c5'] = 'Tek Çekim';
