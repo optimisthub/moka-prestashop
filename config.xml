@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <module>
     <name>moka</name>
-    <displayName><![CDATA[Moka Payment]]></displayName>
+    <displayName><![CDATA[Moka United Payment]]></displayName>
     <version><![CDATA[1.0.0]]></version>
-    <description><![CDATA[Moka Payment Gateway for PrestaShop]]></description>
+    <description><![CDATA[Moka United Payment Gateway for PrestaShop]]></description>
     <author><![CDATA[Optimist Hub]]></author>
     <tab><![CDATA[payments_gateways]]></tab>
     <confirmUninstall><![CDATA[Are you sure?]]></confirmUninstall>

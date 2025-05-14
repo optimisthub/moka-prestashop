@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <module>
     <name>moka</name>
-    <displayName><![CDATA[Moka &Ouml;deme]]></displayName>
+    <displayName><![CDATA[Moka United &Ouml;deme]]></displayName>
     <version><![CDATA[1.0.0]]></version>
-    <description><![CDATA[PrestaShop i&ccedil;in Moka &Ouml;deme Mod&uuml;l&uuml;]]></description>
+    <description><![CDATA[PrestaShop i&ccedil;in Moka United &Ouml;deme Mod&uuml;l&uuml;]]></description>
     <author><![CDATA[Optimist Hub]]></author>
     <tab><![CDATA[payments_gateways]]></tab>
 	<confirmUninstall><![CDATA[Emin misiniz?]]></confirmUninstall>

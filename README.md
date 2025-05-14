@@ -1,6 +1,6 @@
-# Moka - PrestaShop Payment Gateway
+# Moka United - PrestaShop Payment Gateway
 
-![image](https://optimisthub.com/cdn/moka/moka-prestashop-plugin.jpg)
+![image](https://optimisthub.com/cdn/moka/moka-prestashop-plugin.jpg?v=4)
 
 ## Requirements
 
@@ -22,8 +22,8 @@ The bindings require the following extensions in order to work properly:
 Advanced Parameters -> Administration -> Cookie SameSite = None
 
 ## SSL / TLS
-PCI-DSS rules only allow the use of TLS 1.2 and above protocols. Please ensure that your application POST to Moka URL over these protocols. Otherwise, errors such as 'Connection will be closed or Connection Closed' will be received.
+PCI-DSS rules only allow the use of TLS 1.2 and above protocols. Please ensure that your application POST to Moka United URL over these protocols. Otherwise, errors such as 'Connection will be closed or Connection Closed' will be received.
 
 ## Test Cards
 
-See the [Test Cards](https://developer.moka.com/home.php?page=test-kartlari).
+See the [Test Cards](https://developer.mokaunited.com/home.php?page=test-kartlari).
