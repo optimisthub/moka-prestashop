@@ -45,7 +45,15 @@ class MokaCheckoutModuleFrontController extends ModuleFrontController
             $orderId = $this->context->cookie->id_cart;
             $currency = $this->context->currency;
             $orderAmount = $this->context->cart->getOrderTotal(true, Cart::BOTH);
-            $clientIp = Tools::getRemoteAddr();
+            $clientInfo = \Moka\ClientInfo::resolve();
+            $clientIp = $clientInfo['ip'];
+
+            // Prefer the public address from the live connection, but fall back
+            // to the PrestaShop helper when the request carries only a private
+            // address (for example an unconfigured reverse proxy).
+            if (!\Moka\ClientInfo::isPublicIp($clientIp) && \Moka\ClientInfo::isPublicIp(Tools::getRemoteAddr())) {
+                $clientIp = Tools::getRemoteAddr();
+            }
             $httpProtocol = !Configuration::get('PS_SSL_ENABLED') ? 'http://' : 'https://';
 
             $cardHolderFullName = Tools::getValue('card_holder_full_name');
@@ -85,6 +93,7 @@ class MokaCheckoutModuleFrontController extends ModuleFrontController
             $request->setCurrency($this->getCurrency($currency->iso_code));
             $request->setInstallmentNumber($installment);
             $request->setClientIp($clientIp);
+            $request->setClientPort($clientInfo['port']);
             $request->setOtherTrxCode($orderId);
             $request->setSoftware('PrestaShop');
             $request->setReturnHash(1);
