@@ -42,7 +42,13 @@ class MokaCheckoutModuleFrontController extends ModuleFrontController
         if (($_SERVER['REQUEST_METHOD'] == 'POST') && $this->validate()) {
             $this->checkAndSetCookieSameSite();
 
-            $orderId = $this->context->cookie->id_cart;
+            $orderId = (int) $this->context->cookie->id_cart;
+
+            // Cerezdeki id_cart her zaman dolu olmayabilir; sepet nesnesi asil
+            // kaynaktir. Bos kalirsa Moka'ya tutarsiz istek giderdi.
+            if ($orderId < 1 && $this->context->cart) {
+                $orderId = (int) $this->context->cart->id;
+            }
             $currency = $this->context->currency;
             $orderAmount = $this->context->cart->getOrderTotal(true, Cart::BOTH);
             $clientInfo = \Moka\ClientInfo::resolve();
@@ -94,7 +100,13 @@ class MokaCheckoutModuleFrontController extends ModuleFrontController
             $request->setInstallmentNumber($installment);
             $request->setClientIp($clientIp);
             $request->setClientPort($clientInfo['port']);
-            $request->setOtherTrxCode($orderId);
+            // Moka OtherTrxCode'u bayi bazinda KALICI olarak benzersiz ister; sepet
+            // kimligi kucuk bir sayi oldugu icin tekrar kullanimi reddedilir ve
+            // baska bir islemin kaydiyla eslesebilir. Bu yuzden benzersiz bir kod
+            // uretilir ve dogrulama kaydi bu kodla saklanir.
+            $trxCode = $orderId . '-' . date('YmdHis') . '-' . mt_rand(1000, 9999);
+
+            $request->setOtherTrxCode($trxCode);
             $request->setSoftware('PrestaShop');
             $request->setReturnHash(1);
             $request->setRedirectUrl($callbackUrl);
@@ -145,7 +157,18 @@ class MokaCheckoutModuleFrontController extends ModuleFrontController
             $paymentData = $payment->getData();
 
             if ($paymentResultCode == 'Success') {
-                $this->context->cookie->code_for_hash = $paymentData->CodeForHash;
+                // Doğrulama kodu sepete bağlı ve tek kullanımlık olarak saklanır;
+                // böylece aynı hash başka bir sipariş için tekrar kullanılamaz.
+                // PrestaShop Cookie sınıfı dizi kabul etmediği için değerler ayrı
+                // anahtarlarda tutulur.
+                $this->context->cookie->moka_pending_cart_id  = (int) $orderId;
+                $this->context->cookie->moka_pending_code     = (string) $paymentData->CodeForHash;
+                $this->context->cookie->moka_pending_amount   = (float) $request->getAmount();
+                $this->context->cookie->moka_pending_currency = (string) $request->getCurrency();
+
+                // Cerez, banka donusundeki capraz site POST'ta gonderilmeyebilir;
+                // dogrulama kaydi bu yuzden veritabaninda da tutulur.
+                $this->module->savePendingPayment((int) $orderId, $trxCode, $paymentData->CodeForHash, $request->getAmount(), $request->getCurrency());
 
                 $response['redirect'] = $paymentData->Url;
             }

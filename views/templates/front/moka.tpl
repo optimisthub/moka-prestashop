@@ -23,7 +23,7 @@
 *  International Registered Trademark & Property of Moka
 *}
 
-<div class="moka-checkout">
+<div class="moka-checkout" data-checkout-url="{$moka_checkout_url}" data-installment-url="{$moka_installment_url}">
     {if $api_environment == 'test'}
         <div class="moka-checkout-test-alert">{l s='Test Mode' mod='moka'}</div>
     {/if}
@@ -153,7 +153,7 @@
                         $("#moka-checkout-installment").remove();
 
                         $.ajax({
-                            url: '/module/moka/installment',
+                            url: $('.moka-checkout').data('installment-url'),
                             method: 'POST',
                             data: { bin_number: previousCardNumber.slice(0, 6) },
                             dataType: 'json',
@@ -204,7 +204,7 @@
                 }
 
                 $.ajax({
-                    url: '/module/moka/checkout',
+                    url: $('.moka-checkout').data('checkout-url'),
                     method: 'POST',
                     dataType: 'json',
                     data: {

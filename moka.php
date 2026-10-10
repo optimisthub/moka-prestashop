@@ -67,11 +67,75 @@ class Moka extends PaymentModule
         return parent::install() &&
             $this->registerHook('backOfficeHeader') &&
             $this->registerHook('PaymentOptions') &&
-            $this->registerHook('paymentReturn');
+            $this->registerHook('paymentReturn') &&
+            $this->createPendingTable();
     }
+
+    public function createPendingTable()
+    {
+        return Db::getInstance()->execute('CREATE TABLE IF NOT EXISTS `' . _DB_PREFIX_ . 'moka_pending` (
+            `id_cart` int(11) NOT NULL,
+            `trx_code` varchar(64) NOT NULL,
+            `code_for_hash` varchar(64) NOT NULL,
+            `amount` decimal(20,6) NOT NULL,
+            `currency` varchar(8) NOT NULL,
+            `date_add` datetime NOT NULL,
+            PRIMARY KEY (`id_cart`),
+            UNIQUE KEY `trx_code` (`trx_code`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8');
+    }
+
+    public function savePendingPayment($id_cart, $trx_code, $code_for_hash, $amount, $currency)
+    {
+        // Modul guncellenen kurulumlarda install() yeniden calismadigi icin
+        // tablo burada da olusturulur.
+        $this->createPendingTable();
+
+        Db::getInstance()->execute('DELETE FROM `' . _DB_PREFIX_ . 'moka_pending` WHERE `date_add` < DATE_SUB(NOW(), INTERVAL 7 DAY)');
+
+        return Db::getInstance()->execute('REPLACE INTO `' . _DB_PREFIX_ . 'moka_pending` (`id_cart`, `trx_code`, `code_for_hash`, `amount`, `currency`, `date_add`) VALUES ('
+            . (int) $id_cart . ', "' . pSQL((string) $trx_code) . '", "' . pSQL((string) $code_for_hash) . '", "' . (float) $amount . '", "' . pSQL((string) $currency) . '", NOW())');
+    }
+
+    private function getPendingRow($where)
+    {
+        try {
+            $row = Db::getInstance()->getRow('SELECT * FROM `' . _DB_PREFIX_ . 'moka_pending` WHERE ' . $where);
+        } catch (Exception $e) {
+            // Tablo yoksa (henuz hic odeme baslatilmamis kurulum) kayit yokmus
+            // gibi davranilir; callback fail-closed kalir.
+            return null;
+        }
+
+        return (is_array($row) && isset($row['code_for_hash'])) ? $row : null;
+    }
+
+    /**
+     * Kayit, Moka'ya gonderilen benzersiz islem koduyla bulunur. Sepet kimligi
+     * kucuk bir sayi oldugu icin tek basina benzersiz degildir; ayni kodla daha
+     * once islem yapilmissa Moka "OtherTrxCodeIsNotUnique" doner veya baska bir
+     * islemin kaydi eslesebilir.
+     */
+    public function getPendingPaymentByTrxCode($trx_code)
+    {
+        return $this->getPendingRow('`trx_code` = "' . pSQL((string) $trx_code) . '"');
+    }
+
+    public function getPendingPaymentByCart($id_cart)
+    {
+        return $this->getPendingRow('`id_cart` = ' . (int) $id_cart);
+    }
+
+    public function deletePendingPayment($id_cart)
+    {
+        return Db::getInstance()->execute('DELETE FROM `' . _DB_PREFIX_ . 'moka_pending` WHERE `id_cart` = ' . (int) $id_cart);
+    }
+
 
     public function uninstall()
     {
+        Db::getInstance()->execute('DROP TABLE IF EXISTS `' . _DB_PREFIX_ . 'moka_pending`');
+
         return $this->unregisterHook('backOfficeHeader') &&
             $this->unregisterHook('PaymentOptions') &&
             $this->unregisterHook('paymentReturn') &&
@@ -305,10 +369,19 @@ class Moka extends PaymentModule
 
         $this->context->smarty->assign('api_environment', $apiEnvironment);
 
+        // Formun gonderdigi AJAX adresleri PrestaShop'un Link API'si ile uretilir.
+        // Sabit "/module/moka/..." yolu yalnizca dostu URL (URL rewriting) acikken
+        // calisir; kapali olan magazalarda istek ana sayfaya duser ve odeme formu
+        // hicbir zaman gonderilemez.
+        $this->context->smarty->assign(array(
+            'moka_checkout_url' => $this->context->link->getModuleLink($this->name, 'checkout', array(), true),
+            'moka_installment_url' => $this->context->link->getModuleLink($this->name, 'installment', array(), true),
+        ));
+
         $newOption = new \PrestaShop\PrestaShop\Core\Payment\PaymentOption();
         $newOption->setModuleName($this->name)
             ->setCallToActionText($this->trans($title, array(), 'Modules.Moka'))
-            ->setAction($this->context->link->getModuleLink($this->name, 'validation', array(), true))
+            ->setAction($this->context->link->getModuleLink($this->name, 'checkout', array(), true))
             ->setAdditionalInformation($this->fetch('module:moka/views/templates/front/moka.tpl'));
 
         $newOptions[] = $newOption;
