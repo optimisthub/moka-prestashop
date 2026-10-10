@@ -37,7 +37,7 @@ class Moka extends PaymentModule
     {
         $this->name = 'moka';
         $this->tab = 'payments_gateways';
-        $this->version = '1.0.0';
+        $this->version = '1.0.2';
         $this->author = 'Optimist Hub';
         $this->need_instance = 1;
 
